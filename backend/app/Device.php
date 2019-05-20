@@ -12,8 +12,18 @@ class Device extends Model
         'name'
     ];
 
+    protected $hidden = [
+        'device_uuid',
+        'push_token',
+    ];
+
     public function preferences() 
     {
         return $this->hasMany('App\Preferences');
+    }
+
+    public function latestPreferences()
+    {
+        return $this->hasOne('App\Preferences')->latest();
     }
 }

@@ -15,7 +15,9 @@ class PreferencesController extends Controller
      */
     public function index()
     {
-        //
+        $devices = Device::with('latestPreferences')->get();
+
+        return $devices;
     }
 
     /**
