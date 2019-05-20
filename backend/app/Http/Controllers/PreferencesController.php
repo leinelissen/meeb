@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Preferences;
+use App\Device;
 use Illuminate\Http\Request;
 
 class PreferencesController extends Controller
@@ -35,7 +36,20 @@ class PreferencesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'device_uuid' => 'required|exists:devices',
+            'temperature' => 'required|numeric',
+            'co2' => 'required|numeric',
+            'temperature_co2_importance' => 'required|numeric'
+        ]);
+
+        $device = Device::where('device_uuid', '=', $request->device_uuid)->firstOrFail();
+    
+        $preferences = new Preferences($request->only(['temperature', 'co2', 'temperature_co2_importance']));
+
+        $device->preferences()->save($preferences);
+
+        return $preferences;
     }
 
     /**

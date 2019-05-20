@@ -1,4 +1,8 @@
 import React, { PureComponent } from 'react';
+import axios from 'axios';
+import { Constants } from 'expo';
+import { debounce } from 'lodash';
+import { AsyncStorage } from 'react-native';
 import {
     Text,
     SafeAreaView,
@@ -104,6 +108,30 @@ class Preferences extends PureComponent {
     handleChangePreferenceImportance = temperature_co2_importance => this.setState({ temperature_co2_importance });
 
     /**
+     * Try to retrieve the persisted data from AsyncStorage so that we can use it
+     *
+     * @memberof Preferences
+     */
+    componentDidMount() {
+        // Try to retrieve state from storage
+        AsyncStorage.getItem('preferences_state')
+            .then(data => {
+                console.log(data);
+                // If there is not data, we dont have to do anything
+                if (!data) {
+                    return;
+                }
+
+                // Parse the JSON data
+                const state = JSON.parse(data);
+
+                // Set the new state
+                return this.setState(state);
+            })
+            .catch(console.error);
+    }
+
+    /**
      * This function is executed whenever the component data is updated. 
      * NOTE: Because the component is a PureComponent, the callback will only be
      * called whenever the state data actually changes. 
@@ -111,7 +139,20 @@ class Preferences extends PureComponent {
      * @memberof Preferences
      */
     componentDidUpdate() {
-        // 
+        debounce(this.savePreferences, 1000);
+        AsyncStorage.setItem('preferences_state', JSON.stringify(this.state));
+    }
+
+    /**
+     * This code writes the preferences to the backend
+     *
+     * @memberof Preferences
+     */
+    savePreferences = () => {
+        return axios.put(process.env.BACKEND_ENDPOINT + 'preferences', {
+            ...this.state,
+            device_uuid: Constants.installationId,
+        }).catch(console.error);
     }
 
     render() {

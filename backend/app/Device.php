@@ -11,4 +11,9 @@ class Device extends Model
         'push_token',
         'name'
     ];
+
+    public function preferences() 
+    {
+        return $this->hasMany('App\Preferences');
+    }
 }

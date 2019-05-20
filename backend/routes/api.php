@@ -14,3 +14,4 @@ use Illuminate\Http\Request;
 */
 
 Route::put('/devices', 'DeviceController@store');
+Route::put('/preferences', 'PreferencesController@store');

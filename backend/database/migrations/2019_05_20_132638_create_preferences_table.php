@@ -17,7 +17,7 @@ class CreatePreferencesTable extends Migration
             $table->bigIncrements('id');
             $table->integer('temperature');
             $table->integer('co2');
-            $table->integer('temperature_co2_preference');
+            $table->float('temperature_co2_importance', 2, 1);
             $table->integer('device_id')->references('id')->on('devices');
             $table->timestamps();
         });

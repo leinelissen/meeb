@@ -7,5 +7,9 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class Preferences extends Model
 {
-    use \OwenIt\Auditing\Auditable;
+    protected $fillable = [
+        'temperature',
+        'co2',
+        'temperature_co2_importance'
+    ];
 }
