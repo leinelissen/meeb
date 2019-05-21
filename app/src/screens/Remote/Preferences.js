@@ -121,7 +121,6 @@ class Preferences extends PureComponent {
         // Try to retrieve state from storage
         AsyncStorage.getItem('preferences_state')
             .then(data => {
-                console.log(data);
                 // If there is not data, we dont have to do anything
                 if (!data) {
                     return;

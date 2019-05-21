@@ -44,7 +44,6 @@ function selectMappedValue(value, mapping) {
     // Reduce the given mapping
     // NOTE: A mapping should come in the form of [[threshold, ouput]]
     return mapping.reduce((result, [threshold, output]) => {
-        console.log(threshold, output);
         // Check if the result has already been set, if it is, return it again
         if (result !== null) {
             return result;
