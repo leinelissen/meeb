@@ -53,10 +53,10 @@ class Dashboard extends Component {
     render() {
         return (
             <SafeAreaView style={{ flex: 1 }}>
-                <Message />
+                <Message {...this.state} />
                 <View style={styles.splitView}>
                     <View style={styles.sideBar}>
-                        <Residents />
+                        <Residents co2={this.state.co2} temperature={this.state.temperature} />
                     </View>
                     <View style={styles.main}>
                         <Graphs co2={this.state.co2} temperature={this.state.temperature} />
