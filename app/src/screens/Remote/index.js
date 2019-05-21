@@ -11,6 +11,13 @@ import NamePrompt from './components/NamePrompt';
 const TabNavigator = createBottomTabNavigator({
     Preferences,
     Feedback
+}, {
+    tabBarOptions: {
+        tabStyle: {
+            justifyContent: 'center'
+        },
+        showIcon: false
+    } 
 });
 
 const Container = createAppContainer(TabNavigator);

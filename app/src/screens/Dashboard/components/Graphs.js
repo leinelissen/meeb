@@ -6,8 +6,8 @@ import { Colors } from '../../../styles';
 const MIN_TEMPERATURE = 0;
 const MAX_TEMPERATURE = 35;
 
-const MIN_CO2 = 400;
-const MAX_CO2 = 7500;
+const MIN_CO2 = 0;
+const MAX_CO2 = 5000;
 
 function Graphs({ co2, temperature }) {
     if(!co2 || !temperature) {
@@ -15,7 +15,7 @@ function Graphs({ co2, temperature }) {
     }
 
     const temperatureProgress = (temperature - MIN_TEMPERATURE) / MAX_TEMPERATURE;
-    const co2Progress = (co2 - MIN_CO2) / MAX_CO2;
+    const co2Progress = Math.min((co2 - MIN_CO2) / MAX_CO2, 1);
 
     return (
         <View style={styles.container}>
@@ -40,7 +40,7 @@ function Graphs({ co2, temperature }) {
                     <ProgressCircle
                         style={{ height: 200, flex: 0, width: 200 }}
                         progress={co2Progress}
-                        progressColor={Colors.blue}
+                        progressColor={co2Progress < 1 ? Colors.blue : Colors.red}
                         startAngle={Math.PI * 1.25}
                         endAngle={Math.PI * 2.75}
                     />    

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, SafeAreaView, StyleSheet, View, TextInput, Button } from 'react-native';
+import { Text, SafeAreaView, StyleSheet, View, TextInput, Button, ScrollView } from 'react-native';
 import { Colors } from '../../styles';
 
 class Feedback extends Component {
@@ -36,25 +36,27 @@ class Feedback extends Component {
     render() {
         return (
             <SafeAreaView>
-                <View style={styles.bottomBorder}>
-                    <Text style={styles.heading}>{this.props.screenProps.name}</Text>
-                </View>
-                <View style={styles.question}>
-                    <Text>How did you feel about the indoor air quality today?</Text>
-                </View>
-                <View style={styles.bottomBorder}>
-                    <TextInput 
-                        style={styles.input}
-                        value={this.state.message}
-                        onChangeText={this.handleChangeMessage}
-                        placeholder="Type your message..."
-                        multiline
-                        editable
-                    />
-                </View>
-                <View style={styles.button}>
-                    <Button title="Send" onPress={this.sendFeedback} />
-                </View>
+                <ScrollView>
+                    <View style={styles.bottomBorder}>
+                        <Text style={styles.heading}>{this.props.screenProps.name}</Text>
+                    </View>
+                    <View style={styles.question}>
+                        <Text>How did you feel about the indoor air quality today?</Text>
+                    </View>
+                    <View style={styles.bottomBorder}>
+                        <TextInput 
+                            style={styles.input}
+                            value={this.state.message}
+                            onChangeText={this.handleChangeMessage}
+                            placeholder="Type your message..."
+                            multiline
+                            editable
+                        />
+                    </View>
+                    <View style={styles.button}>
+                        <Button title="Send" onPress={this.sendFeedback} />
+                    </View>
+                </ScrollView>
             </SafeAreaView>
         );
     }
@@ -81,7 +83,7 @@ const styles = StyleSheet.create({
         borderBottomColor: Colors.grey.light,
     },
     input: {
-        height: '60%',
+        minHeight: 100,
         padding: 20,
         marginTop: 20,
     },
