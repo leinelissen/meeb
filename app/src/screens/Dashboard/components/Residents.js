@@ -49,7 +49,7 @@ class Residents extends Component {
  * @returns React.Component
  */
 function Resident({ name, latest_preferences }) {
-    if (!latest_preferences && !latest_preferences.co2) {
+    if (!latest_preferences || !latest_preferences.co2 || !latest_preferences.temperature) {
         // Disable rendering if there are no preferences yet, so we don't crash
         // the application unneccessarily.
         return null;

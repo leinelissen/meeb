@@ -46,6 +46,11 @@ class Preferences extends PureComponent {
         temperature_co2_importance: 0.5,
     };
 
+    constructor() {
+        super();
+        this.debouncedSavePreferences = debounce(this.savePreferences, 1000);
+    }
+
     /**
      * Generate the Picker items for the Temperature picker
      *
@@ -139,7 +144,7 @@ class Preferences extends PureComponent {
      * @memberof Preferences
      */
     componentDidUpdate() {
-        debounce(this.savePreferences, 1000);
+        this.debouncedSavePreferences();
         AsyncStorage.setItem('preferences_state', JSON.stringify(this.state));
     }
 
@@ -152,7 +157,9 @@ class Preferences extends PureComponent {
         return axios.put(process.env.BACKEND_ENDPOINT + 'preferences', {
             ...this.state,
             device_uuid: Constants.installationId,
-        }).catch(console.error);
+        })
+        .then(data => console.log(JSON.stringify(data)))
+        .catch(console.error);
     }
 
     render() {
