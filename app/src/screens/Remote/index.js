@@ -31,6 +31,8 @@ class Remote extends PureComponent {
         name: '',
     }
 
+    static router = TabNavigator.router;
+
     componentDidMount() {
         AsyncStorage.getItem('remote_state')
             .then(data => {
@@ -97,8 +99,8 @@ class Remote extends PureComponent {
             return <NamePrompt onNameSelected={this.register} />
         }
 
-        return <Container />;
+        return <TabNavigator navigation={this.props.navigation} screenProps={{ name: this.state.name }} />;
     }
 }
 
-export default Remote;
+export default createAppContainer(Remote);

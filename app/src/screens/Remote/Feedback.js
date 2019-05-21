@@ -37,7 +37,7 @@ class Feedback extends Component {
         return (
             <SafeAreaView>
                 <View style={styles.bottomBorder}>
-                    <Text style={styles.heading}>Lianne</Text>
+                    <Text style={styles.heading}>{this.props.screenProps.name}</Text>
                 </View>
                 <View style={styles.question}>
                     <Text>How did you feel about the indoor air quality today?</Text>

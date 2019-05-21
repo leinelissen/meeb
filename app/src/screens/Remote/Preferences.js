@@ -160,7 +160,7 @@ class Preferences extends PureComponent {
             <SafeAreaView>
                 <ScrollView>
                     <View style={styles.bottomBorder}>
-                        <Text style={styles.heading}>Lianne</Text>
+                        <Text style={styles.heading}>{this.props.screenProps.name}</Text>
                     </View>
                     <View style={styles.lineBreak} />
                     <View style={styles.bottomBorder}>
