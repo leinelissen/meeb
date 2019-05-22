@@ -90,7 +90,7 @@ function Resident({ name, latest_preferences, co2, temperature }) {
         const diff = Math.abs(latest_preferences.temperature - temperature);
 
         // Select the correct emoji
-        emoji = selectMappedValue(diff, co2Mapping);
+        emoji = selectMappedValue(diff, temperatureMapping);
     } else {
         // We calculate temperature "points" by calculating the difference in
         // preferred and actual temperature
