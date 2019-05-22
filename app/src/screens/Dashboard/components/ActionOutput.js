@@ -15,7 +15,7 @@ function ActionOutput({ doorIsClosed, windowIsClosed }) {
 
     return (
         <View style={styles.container}>
-            <View style={{ ...styles.item, ...styles.divider }}>
+            <View style={styles.itemWithDivider}>
                 <Text style={styles.heading}>Window</Text>
                 <View style={styles.imageContainer}>
                     {windowIsClosed 
@@ -61,10 +61,13 @@ const styles = StyleSheet.create({
     imageContainer: {
         alignItems: 'center',
     },
-    divider: {
+    itemWithDivider: {
         borderRightWidth: 1,
         borderRightColor: Colors.grey.light,
-    }
+        padding: 20,
+        flex: 1,
+        height: '100%',
+    },
 });
 
 export default ActionOutput;

@@ -21,7 +21,7 @@ class Dashboard extends Component {
         super();
 
         // Override screen orientation to be sideways
-        ScreenOrientation.allowAsync(ScreenOrientation.Orientation.LANDSCAPE);
+        ScreenOrientation.allow(ScreenOrientation.Orientation.LANDSCAPE);
     }
 
     componentDidMount() {
