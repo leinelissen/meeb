@@ -13,6 +13,7 @@ import {
     Slider
 } from 'react-native';
 import { Colors } from '../../styles';
+import { BACKEND_ENDPOINT } from '../../env';
 
 /**
  * These variables hlep define the range of temperatures that are shown in the
@@ -153,7 +154,7 @@ class Preferences extends PureComponent {
      * @memberof Preferences
      */
     savePreferences = () => {
-        return axios.put(process.env.BACKEND_ENDPOINT + 'preferences', {
+        return axios.put(BACKEND_ENDPOINT + 'preferences', {
             ...this.state,
             device_uuid: Constants.installationId,
         })

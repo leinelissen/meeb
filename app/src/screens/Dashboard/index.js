@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, SafeAreaView, StyleSheet } from 'react-native';
 import { ScreenOrientation } from 'expo';
+import { OOCSI_CHANNEL } from '../../env';
 import OOCSI from '../../lib/OOCSI';
 import { Colors } from '../../styles';
 
@@ -26,7 +27,7 @@ class Dashboard extends Component {
 
     componentDidMount() {
         OOCSI.connect('wss://oocsi.id.tue.nl/ws');
-        OOCSI.subscribe(process.env.OOCSI_CHANNEL, this.handleOOCSIMessage);
+        OOCSI.subscribe(OOCSI_CHANNEL, this.handleOOCSIMessage);
     }
 
     /**

@@ -26,4 +26,9 @@ class Device extends Model
     {
         return $this->hasOne('App\Preferences')->latest();
     }
+
+    public function feedback()
+    {
+        return $this->hasMany('App\Feedback');
+    }
 }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { View } from 'react-native';
 import Resident from './Resident';
+import { BACKEND_ENDPOINT } from '../../../../env';
 
 class Residents extends Component {
     state = {
@@ -24,7 +25,7 @@ class Residents extends Component {
      * @memberof Residents
      */
     fetchData = () => {
-        return axios.get(process.env.BACKEND_ENDPOINT + 'preferences')
+        return axios.get(BACKEND_ENDPOINT + 'preferences')
             .then(({ data: residents }) => {
                 this.setState({ residents })
             })

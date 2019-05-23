@@ -3,6 +3,7 @@ import { ActivityIndicator, View, StyleSheet, AsyncStorage } from 'react-native'
 import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
 import axios from 'axios';
 import { Constants, Notifications, Permissions } from 'expo';
+import { BACKEND_ENDPOINT } from '../../env';
 
 import Feedback from './Feedback';
 import Preferences from './Preferences';
@@ -81,7 +82,7 @@ class Remote extends PureComponent {
 
     register = name => {
         this.registerPushNotifications()
-            .then(push_token => axios.put(process.env.BACKEND_ENDPOINT + 'devices', {
+            .then(push_token => axios.put(BACKEND_ENDPOINT + 'devices', {
                 name,
                 push_token: Constants.isDevice ? push_token : '000000000000000000',
                 device_uuid: Constants.installationId,

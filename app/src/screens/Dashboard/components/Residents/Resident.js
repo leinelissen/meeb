@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
         color: Colors.grey.normal,
     },
     mood: {
-        fontSize: 24,
+        fontSize: 32,
     },
     container: {
         marginLeft: 20,

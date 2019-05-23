@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Text, SafeAreaView, StyleSheet, View, TextInput, Button, ScrollView } from 'react-native';
+import axios from 'axios';
+import { Constants } from 'expo';
 import { Colors } from '../../styles';
+import { BACKEND_ENDPOINT } from '../../env';
 
 class Feedback extends Component {
     /**
@@ -27,10 +30,16 @@ class Feedback extends Component {
      */
     sendFeedback = () => {
         // Send message
-        console.log(this.state.message);
+        return axios.put(BACKEND_ENDPOINT + 'feedback', {
+            ...this.state,
+            device_uuid: Constants.installationId,
+        })
+        .then(data => console.log(JSON.stringify(data)))
+        .then(() => this.setState({ message: null }))
+        .catch(console.error);
 
         // Clear state
-        this.setState({ message: null });
+        
     }
 
     render() {
