@@ -10,7 +10,7 @@ const co2Mapping = [
     [500, "🙂"],
     [1000, "😐"],
     [2000, "🙁"],
-    [null, "🙁"]
+    [null, "😫"]
 ];
 
 // The mapping for CO2 to points for the mixed result
@@ -30,7 +30,7 @@ const temperatureMapping = [
     [3, "🙂"],
     [4, "😐"],
     [5, "🙁"],
-    [null, "🙁"]
+    [null, "😫"]
 ];
 
 /**
