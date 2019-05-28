@@ -2,11 +2,12 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use ExponentPhpSDK\Expo;
-use React\Promise\Timer;
-use Ratchet\Client;
 use App\Device;
+use Ratchet\Client;
+use React\Promise\Timer;
+use ExponentPhpSDK\Expo;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 
 class sendNotifications extends Command
 {
@@ -89,7 +90,8 @@ class sendNotifications extends Command
                 $connection->send('php_oocsi_client');
 
                 // Subscribe to the relevant channel
-                $connection->send('subscribe ded-air-quality-group-3-week-5');
+                $oocsi_channel = env('OOCSI_CHANNEL');
+                $connection->send("subscribe $oocsi_channel");
 
                 // ...and now we wait for the messages to roll in
             }, function ($e) {
@@ -154,75 +156,109 @@ class sendNotifications extends Command
         ] = $message['data'];
         
         // Determine the optimal setting for the windows and doors
-        if ($temperature < 20 && $co2 < 1000) {
-            $shouldWindowBeClosed = true;
-            $shouldDoorBeClosed = true;
-        } else if ($temperature < 22 && $co2 < 1000) {
-            $shouldWindowBeClosed = false;
-            $shouldDoorBeClosed = true;
-        } else if ($temperature >= 22 && $co2 < 1000) {
-            $shouldWindowBeClosed = false;
-            $shouldDoorBeClosed = false;
-        } else if ($temperature < 18 && $co2 < 2000) {
-            $shouldWindowBeClosed = true;
-            $shouldDoorBeClosed = true;
-        } else if ($temperature < 22 && $co2 < 2000) {
-            $shouldWindowBeClosed = false;
-            $shouldDoorBeClosed = true;
-        } else if ($temperature >= 22 && $co2 < 2000) {
-            $shouldWindowBeClosed = false;
-            $shouldDoorBeClosed = false;
-        } else if ($temperature < 18 && $co2 < 5000) {
-            $shouldWindowBeClosed = true;
-            $shouldDoorBeClosed = true;
-        } else if ($temperature < 20 && $co2 < 5000) {
-            $shouldWindowBeClosed = false;
-            $shouldDoorBeClosed = true;
-        } else if ($temperature < 22 && $co2 < 5000) {
-            $shouldWindowBeClosed = false;
-            $shouldDoorBeClosed = false;
-        } else if ($temperature >= 22 && $co2 < 5000) {
-            $shouldWindowBeClosed = false;
-            $shouldDoorBeClosed = false;
-        } else if ($temperature < 18 && $co2 >= 5000) {
-            $shouldWindowBeClosed = false;
-            $shouldDoorBeClosed = true;
-        } else if ($temperature >= 18 && $co2 >= 5000) {
-            $shouldWindowBeClosed = false;
-            $shouldDoorBeClosed = false;
-        }
-
-        // Check if we need to perform any actions on the doors and/or windows
         $notification = "";
-        if ($windowIsClosed === $shouldWindowBeClosed
-            && $doorIsClosed === $shouldDoorBeClosed) {
-                // Exit the function if everything is allright
-                return;
-        } else if ($windowIsClosed !== $shouldWindowBeClosed
-            && $doorIsClosed !== $shouldDoorBeClosed) {
-                if ($shouldWindowBeClosed !== $shouldDoorBeClosed) {
-                    $notification = "Please ";
-                    $notification .= $shouldWindowBeClosed ? 'close' : 'open' ;
-                    $notification .= " the window and";
-                    $notification .= $shouldDoorBeClosed ? 'close' : 'open';
-                    $notification .= " the door.";
-                } else {
-                    $notification = "Please ";
-                    $notification .= $shouldWindowBeClosed ? 'close' : 'open' ;
-                    $notification .= " the window and the door.";
-                }
-        } else {
-            if ($shouldWindowBeClosed !== $windowIsClosed) {
-                $notification = "Please ";
-                $notification .= $shouldWindowBeClosed ? 'close' : 'open' ;
-                $notification .= " the window.";
-            } else {
-                $notification = "Please ";
-                $notification .= $shouldDoorBeClosed ? 'close' : 'open' ;
-                $notification .= " the door.";
-            }
+        $isInDesiredState = true;
+        if ($temperature < 18 && $co2 < 1000) {
+            $isInDesiredState = $windowIsClosed && $doorIsClosed;
+            $notification = $isInDesiredState   
+                ? "The air quality is good, however it is quite cold. You might want to adjust the thermostat"
+                : "The air quality is good, however it is quite cold. It might be better to close all doors and windows and adjust the thermostat.";
+        } else if ($temperature < 20 && $co2 < 1000) {
+            $isInDesiredState = $windowIsClosed && $doorIsClosed;
+            $notification = $isInDesiredState   
+                ? "The air quality is good, however it is a bit cold. It might be better to close all doors and windows."
+                : "The air quality is good, however it is a bit cold. It might be better to close all doors and windows.";
+        } else if ($temperature < 22 && $co2 < 1000) {
+            $isInDesiredState = !$windowIsClosed && $doorIsClosed;
+            $notification = $isInDesiredState   
+                ? "The air quality is good, however it is quite warm."
+                : "The air quality is good, however it is quite warm. It might be better to open a window.";
+        } else if ($temperature > 22 && $co2 < 1000) {
+            $isInDesiredState = !$windowIsClosed && !$doorIsClosed;
+            $notification = $isInDesiredState   
+                ? "The temperature is higher than it should be."
+                : "The temperature is higher than it should be, you should open some doors and windows.";
+        } else if ($temperature < 18 && $co2 < 2000) {
+            $isInDesiredState = $windowIsClosed && $doorIsClosed;
+            $notification = $isInDesiredState   
+                ? "Although it is quite cold, you could try to open the doors to other rooms in order to improve the air quality"
+                : "Although it is quite cold, you could try to open the doors to other rooms in order to improve the air quality";
+        } else if ($temperature < 20 && $co2 < 2000) {
+            $isInDesiredState = !$windowIsClosed && $doorIsClosed;
+            $notification = $isInDesiredState   
+                ? "Both the temperature and the air quality would benefit from some fresh air."
+                : "The room would benefit from some fresh are, you should open the window.";
+        } else if ($temperature < 22 && $co2 < 2000) {
+            $isInDesiredState = !$windowIsClosed && $doorIsClosed;
+            $notification = $isInDesiredState   
+                ? "Both the temperatue and the CO2 level are quite high."
+                : "Both the temperatue and the CO2 level are quite high, you should really open a window.";
+        } else if ($temperature > 22 && $co2 < 2000) {
+            $isInDesiredState = !$windowIsClosed && !$doorIsClosed;
+            $notification = $isInDesiredState   
+                ? "The current CO2 level is associated with complaints of drowsiness and poor air."
+                : "The current CO2 level is associated with complaints of drowsiness and poor air. Both the door and window should be opened";
+        } else if ($temperature < 18 && $co2 < 5000) {
+            $isInDesiredState = $windowIsClosed && $doorIsClosed;
+            $notification = $isInDesiredState   
+                ? "Although it is quite cold, you should really try to open inside doors and maybe a small window to improve the air quality "
+                : "Although the CO2 level is quite high, for a healthy room temperature it would be better to open only inside doors.";
+        } else if ($temperature < 20 && $co2 < 5000) {
+            $isInDesiredState = !$windowIsClosed && $doorIsClosed;
+            $notification = $isInDesiredState   
+                ? "The current CO2 level is associated with headaches and sleepiness."
+                : "The current CO2 level is associated with headaches and sleepiness. It would be better to open a window.";
+        } else if ($temperature < 22 && $co2 < 5000) {
+            $isInDesiredState = $windowIsClosed && $doorIsClosed;
+            $notification = $isInDesiredState   
+                ? "Both the temperature and the CO2 level are slightly higher than they should be."
+                : "Both the temperature and the CO2 level are slightly higher than they should be, the door and the window should be open";
+        } else if ($temperature > 22 && $co2 < 5000) {
+            $isInDesiredState = !$windowIsClosed && !$doorIsClosed;
+            $notification = $isInDesiredState   
+                ? "Your inside air quality isn't looking good! Is there anything else you can open?"
+                : "Your inside air quality isn't looking good! Try to open as much as possible";
+        } else if ($temperature < 18 && $co2 > 5000) {
+            $isInDesiredState = $windowIsClosed && !$doorIsClosed;
+            $notification = $isInDesiredState   
+                ? "The measured CO2 level indicate unusual air conditions, the open window should help to lower it."
+                : "The measured CO2 level indicate unusual air conditions, you might want to open a window to avoid a headache.";
+        } else if ($temperature < 20 && $co2 > 5000) {
+            $isInDesiredState = !$windowIsClosed && !$doorIsClosed;
+            $notification = $isInDesiredState   
+                ? "The measured CO2 level indicate unusual air conditions where high levels of other gases also could be present. If it doesn't change quickly you might want to leave the room. "
+                : "You have a CO2 problem! Both the window and door should be open";
+        } else if ($temperature < 22 && $co2 > 5000) {
+            $isInDesiredState = !$windowIsClosed && !$doorIsClosed;
+            $notification = $isInDesiredState   
+                ? "The living conditions in this room are really bad, you should really consider going somewhere else."
+                : "The living conditions in this room are really bad, both the window and door should be opened";
+        } else if ($temperature > 22 && $co2 > 5000) {
+            $isInDesiredState = !$windowIsClosed && !$doorIsClosed;
+            $notification = $isInDesiredState   
+                ? "Your inside air quality is REALLY, REALLY bad! Leave everything open, close the blinds and try to go somewhere else."
+                : "Your inside air quality is REALLY, REALLY bad! You should open all doors and windows and try to go somewhere else.";
         }
 
+        // Retrieve the last relevant variables from the Laravel Cache
+        $lastNotification = Cache::get('last_notification', null);
+        $lastWindowIsClosed = Cache::get('last_window_is_closed', null);
+        $lastDoorIsClosed = Cache::get('last_door_is_closed', null);
+        
+        // Check if we need to perform any actions on the doors and/or windows
+        if ($isInDesiredState
+            || $lastNotification === $notification
+            || ($lastWindowIsClosed === $windowIsClosed && $lastDoorIsClosed === $doorIsClosed)) {
+                echo "Aborting the notifications, since the criteria were not met.";
+                exit(0);
+        }
+
+        // Save new variables to cache
+        Cache::put('last_notification', $notification);
+        Cache::put('last_window_is_closed', $windowIsClosed);
+        Cache::put('last_door_is_closed', $doorIsClosed);
+
+        // Send out the notification
         $this->sendNotification($notification);
     }
 
