@@ -24,8 +24,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->command('command:sendNotifications')
+                 ->everyFiveMinutes()
+                 ->between('8:00', '23:00');
     }
 
     /**

@@ -254,9 +254,9 @@ class sendNotifications extends Command
         }
 
         // Save new variables to cache
-        Cache::put('last_notification', $notification);
-        Cache::put('last_window_is_closed', $windowIsClosed);
-        Cache::put('last_door_is_closed', $doorIsClosed);
+        Cache::put('last_notification', $notification, now()->addHours(4));
+        Cache::put('last_window_is_closed', $windowIsClosed, now()->addHours(4));
+        Cache::put('last_door_is_closed', $doorIsClosed, now()->addHours(4));
 
         // Send out the notification
         $this->sendNotification($notification);
