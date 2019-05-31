@@ -3,6 +3,7 @@ import axios from 'axios';
 import { View } from 'react-native';
 import Resident from './Resident';
 import { BACKEND_ENDPOINT } from '../../../../env';
+import AsyncErrorHandler from '../../../../helpers/AsyncErrorHandler';
 
 class Residents extends Component {
     state = {
@@ -29,7 +30,7 @@ class Residents extends Component {
             .then(({ data: residents }) => {
                 this.setState({ residents })
             })
-            .catch(console.error);
+            .catch(AsyncErrorHandler);
     }
 
     render() {

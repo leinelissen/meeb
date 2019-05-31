@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Constants } from 'expo';
 import { Colors } from '../../styles';
 import { BACKEND_ENDPOINT } from '../../env';
+import AsyncErrorHandler from '../../helpers/AsyncErrorHandler';
 
 class Feedback extends Component {
     /**
@@ -35,11 +36,9 @@ class Feedback extends Component {
             device_uuid: Constants.installationId,
         })
         .then(data => console.log(JSON.stringify(data)))
-        .then(() => this.setState({ message: null }))
-        .catch(console.error);
-
         // Clear state
-        
+        .then(() => this.setState({ message: null }))
+        .catch(AsyncErrorHandler);
     }
 
     render() {

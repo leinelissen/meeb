@@ -31,4 +31,9 @@ class Device extends Model
     {
         return $this->hasMany('App\Feedback');
     }
+
+    public function notificationREsponse()
+    {
+        return $this->hasMany('App\NotificationResponse');
+    }
 }

@@ -17,3 +17,4 @@ Route::put('/devices', 'DeviceController@store');
 Route::put('/preferences', 'PreferencesController@store');
 Route::get('/preferences', 'PreferencesController@index');
 Route::put('/feedback', 'FeedbackController@store');
+Route::put('/notification-response', 'NotificationResponseController@store');

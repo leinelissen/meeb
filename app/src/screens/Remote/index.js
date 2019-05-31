@@ -7,7 +7,9 @@ import { BACKEND_ENDPOINT } from '../../env';
 
 import Feedback from './Feedback';
 import Preferences from './Preferences';
+import NotificationOverlay from './NotificationOverlay';
 import NamePrompt from './components/NamePrompt';
+import AsyncErrorHandler from '../../helpers/AsyncErrorHandler';
 
 const TabNavigator = createBottomTabNavigator({
     Preferences,
@@ -58,6 +60,10 @@ class Remote extends PureComponent {
             .catch(console.error);
     }
 
+    componentDidCatch(error) {
+        console.error('CAUGHT ERROR', error);
+    }
+
     /**
      * We need to ask for permissions in order to be able to show notifications.
      * We do this every time the app is run, so we never have to deal with it.
@@ -91,7 +97,7 @@ class Remote extends PureComponent {
                 name,
                 registered: true,
             }))
-            .catch(console.error);
+            .catch(AsyncErrorHandler);
     }
 
     render() {
@@ -107,7 +113,12 @@ class Remote extends PureComponent {
             return <NamePrompt onNameSelected={this.register} />
         }
 
-        return <TabNavigator navigation={this.props.navigation} screenProps={{ name: this.state.name }} />;
+        return (
+            <React.Fragment>
+                <NotificationOverlay />
+                <TabNavigator navigation={this.props.navigation} screenProps={{ name: this.state.name }} />
+            </React.Fragment>
+        );
     }
 }
 

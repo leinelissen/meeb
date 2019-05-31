@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { Colors } from '../../styles';
 import { BACKEND_ENDPOINT } from '../../env';
+import AsyncErrorHandler from '../../helpers/AsyncErrorHandler';
 
 /**
  * These variables hlep define the range of temperatures that are shown in the
@@ -159,7 +160,7 @@ class Preferences extends PureComponent {
             device_uuid: Constants.installationId,
         })
         .then(data => console.log(JSON.stringify(data)))
-        .catch(console.error);
+        .catch(AsyncErrorHandler);
     }
 
     render() {

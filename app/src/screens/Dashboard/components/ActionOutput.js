@@ -19,8 +19,8 @@ function ActionOutput({ doorIsClosed, windowIsClosed }) {
                 <Text style={styles.heading}>Window</Text>
                 <View style={styles.imageContainer}>
                     {windowIsClosed 
-                        ? <Image source={require('./assets/window-closed.png')} style={styles.image} />
-                        : <Image source={require('./assets/window-open.png')} style={styles.image} />
+                        ? <Image source={require('../../../assets/window-closed.png')} style={styles.image} />
+                        : <Image source={require('../../../assets/window-open.png')} style={styles.image} />
                     }
                 </View>
             </View>
@@ -28,8 +28,8 @@ function ActionOutput({ doorIsClosed, windowIsClosed }) {
                 <Text style={styles.heading}>Door</Text>
                 <View style={styles.imageContainer}>
                     {doorIsClosed 
-                        ? <Image source={require('./assets/door-closed.png')} style={styles.image} />
-                        : <Image source={require('./assets/door-open.png')} style={styles.image} />
+                        ? <Image source={require('../../../assets/door-closed.png')} style={styles.image} />
+                        : <Image source={require('../../../assets/door-open.png')} style={styles.image} />
                     }                
                 </View>
             </View>
