@@ -60,6 +60,7 @@ class NotificationOverlay extends Component {
 
         return axios.put(BACKEND_ENDPOINT + 'notification-response', data)
             .then(() => this.setState({ notification: {} }))
+            .then(() => Notifications.setBadgeNumberAsync(0))
             .catch(AsyncErrorHandler);
     }
     
@@ -76,6 +77,7 @@ class NotificationOverlay extends Component {
         
         return axios.put(BACKEND_ENDPOINT + 'notification-response', data)
             .then(() => this.setState({ notification: {} }))
+            .then(() => Notifications.setBadgeNumberAsync(0))
             .catch(AsyncErrorHandler);
     }
 
@@ -104,6 +106,7 @@ class NotificationOverlay extends Component {
         
         return axios.put(BACKEND_ENDPOINT + 'notification-response', data)
             .then(() => this.setState({ notification: {} }))
+            .then(() => Notifications.setBadgeNumberAsync(0))
             .catch(AsyncErrorHandler);
     }
 
