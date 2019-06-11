@@ -23,8 +23,6 @@ const TabNavigator = createBottomTabNavigator({
     } 
 });
 
-const Container = createAppContainer(TabNavigator);
-
 const styles = StyleSheet.create({
     spinner: {
         display: 'flex',
