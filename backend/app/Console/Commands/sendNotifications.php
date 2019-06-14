@@ -166,7 +166,7 @@ class sendNotifications extends Command
         $shouldWindowBeClosed = null;
         $shouldDoorBeClosed = null;
 
-        if (co2 < 1000) {
+        if ($co2 < 1000) {
             echo "CO2 value is too low, aborting";
             Log::info('CO2 value is too low, exiting.');
             exit(0);
