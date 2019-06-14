@@ -154,12 +154,20 @@ class sendNotifications extends Command
             'windowIsClosed' => $windowIsClosed, 
             'doorIsClosed' => $doorIsClosed 
         ] = $message['data'];
+
+        // Subtract two degrees from temperature because of inaccuracy
+        $temperature -= 2;
         
         // Determine the optimal setting for the windows and doors
         $notification = "";
         $shouldWindowBeClosed = null;
         $shouldDoorBeClosed = null;
-        $isInDesiredState = true;
+
+        if (co2 < 1000) {
+            echo "CO2 value is too low, aborting";
+            exit(0);
+        }
+
         if ($temperature < 18 && $co2 < 1000) {
             $shouldWindowBeClosed = true;
             $shouldDoorBeClosed = true;
