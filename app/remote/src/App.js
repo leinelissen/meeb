@@ -113,8 +113,8 @@ class Remote extends PureComponent {
 
         return (
             <React.Fragment>
-                <NotificationOverlay />
                 <TabNavigator navigation={this.props.navigation} screenProps={{ name: this.state.name }} />
+                <NotificationOverlay />
             </React.Fragment>
         );
     }

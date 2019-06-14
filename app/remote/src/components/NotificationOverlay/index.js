@@ -29,6 +29,7 @@ class NotificationOverlay extends Component {
     state = {
         notification: {},
         notificationIsRejected: false,
+        submitting: false,
     }
 
     /**
@@ -233,18 +234,21 @@ class NotificationOverlay extends Component {
                             <TouchableOpacity 
                                 style={styles.button}
                                 onPress={this.close}
+                                disabled={this.state.submitting}
                             >
                                 <Text style={{ color: Colors.blue, fontWeight: '600', fontSize: 16 }}>Sure</Text>
                             </TouchableOpacity>
                             <TouchableOpacity 
                                 style={styles.button}
                                 onPress={this.reject}
+                                disabled={this.state.submitting}
                             >
                                 <Text style={{ color: Colors.red, fontWeight: '600', fontSize: 16 }}>No</Text>
                             </TouchableOpacity>
                             <TouchableOpacity 
                                 style={[styles.button, styles.lastButton]}
                                 onPress={this.skip}
+                                disabled={this.state.submitting}
                             >
                                 <Text style={{ color: Colors.grey.normal, fontSize: 16 }}>I'm not at home...</Text>
                             </TouchableOpacity>
@@ -261,8 +265,9 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 0,
         left: 0,
-        width: '100%',
-        height: '100%',
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'white',
         zIndex: 2,
     },
     container: {

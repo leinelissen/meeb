@@ -20,11 +20,15 @@ const styles = StyleSheet.create({
 class NamePrompt extends Component {
     state = {
         name: null,
+        submitting: false
     }
 
     handleNameChange = name => this.setState({ name });
 
-    submit = () => this.props.onNameSelected(this.state.name);
+    submit = () => {
+        this.props.onNameSelected(this.state.name);
+        this.setState({ submitting: true });
+    }
 
     render() {
         return (
@@ -38,7 +42,7 @@ class NamePrompt extends Component {
                 <Button 
                     title="submit" 
                     onPress={this.submit} 
-                    disabled={!this.state.name || !this.state.name.length}
+                    disabled={!this.state.name || !this.state.name.length || this.state.submitting}
                 />
             </View>
         )
