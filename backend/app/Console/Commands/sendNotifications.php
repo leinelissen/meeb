@@ -7,6 +7,7 @@ use Ratchet\Client;
 use React\Promise\Timer;
 use ExponentPhpSDK\Expo;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 
 class sendNotifications extends Command
@@ -63,6 +64,8 @@ class sendNotifications extends Command
      */
     public function handle()
     {
+        Log::info('Running sendNotifications cronjob');
+
         // Create loop
         $this->loop = \React\EventLoop\Factory::create();
 
@@ -165,6 +168,7 @@ class sendNotifications extends Command
 
         if (co2 < 1000) {
             echo "CO2 value is too low, aborting";
+            Log::info('CO2 value is too low, exiting.');
             exit(0);
         }
 
@@ -276,6 +280,7 @@ class sendNotifications extends Command
             || $lastNotification === $notification
             || ($lastWindowIsClosed === $windowIsClosed && $lastDoorIsClosed === $doorIsClosed)) {
                 echo "Aborting the notifications, since the criteria were not met.";
+                Log::info('Criteria were not met, aborting.');
                 exit(0);
         }
 
@@ -324,6 +329,8 @@ class sendNotifications extends Command
             // Notify said device
             $expo->notify($device->device_uuid, $notification);
         }
+
+        Log::info("Successfully sent out {$devices->count()} notifications");
 
         exit(0);
     }
