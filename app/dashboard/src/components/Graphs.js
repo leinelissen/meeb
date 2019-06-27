@@ -14,6 +14,8 @@ function Graphs({ co2, temperature }) {
         return <ActivityIndicator />;
     }
 
+    temperature -= 2;
+
     const temperatureProgress = (temperature - MIN_TEMPERATURE) / MAX_TEMPERATURE;
     const co2Progress = Math.min((co2 - MIN_CO2) / MAX_CO2, 1);
 
